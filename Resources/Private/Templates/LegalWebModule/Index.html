@@ -1,0 +1,64 @@
+{namespace neos=Neos\Neos\ViewHelpers}
+<div class="neos-content neos-container-fluid">
+    <div class="neos-notification-container">
+        <f:render partial="FlashMessages"/>
+    </div>
+    <div class="neos-row-fluid">
+        <div class="neos-span12">
+            <h1>
+                <f:translate id="module.label" source="Backend" package="LegalWeb.GdprTools"/>
+            </h1>
+        </div>
+    </div>
+    <div class="neos-row-fluid">
+        <div class="neos-span12">
+            <f:if condition="{latestDataset}">
+                <f:then>
+                    <p><f:translate id="latestUpdate" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.creationDateTime}"/></p>
+                    <p><f:translate id="domainId" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.domainId}"/></p>
+                </f:then>
+                <f:else>
+                    <p><f:translate id="noLatestUpdate" source="Backend" package="LegalWeb.GdprTools"/></p>
+                </f:else>
+            </f:if>
+            <f:form action="update" method="post">
+                <div class="neos-row-fluid">
+                    <div class="neos-span6">
+                        <fieldset>
+                            <div class="neos-control-group">
+                                <div class="neos-controls">
+                                    <f:form.submit value="{neos:backend.translate(id: 'updateNow', source: 'Backend', package: 'LegalWeb.GdprTools')}" class="neos-button neos-button-primary" />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </f:form>
+        </div>
+    </div>
+    <div class="neos-row-fluid">
+        <div class="neos-span12">
+            <h2>
+                <f:translate id="messagesHeadline" source="Backend" package="LegalWeb.GdprTools"/>
+            </h2>
+        </div>
+    </div>
+    <div class="neos-row-fluid">
+        <div class="neos-span12">
+            <f:if condition="{messages}">
+                <f:then>
+                    <ul>
+                        <f:for each="{messages}" as="message">
+                            <li>{message}</li>
+                        </f:for>
+                    </ul>
+                </f:then>
+                <f:else>
+                    <p>
+                        <f:translate id="noMessages" source="Backend" package="LegalWeb.GdprTools"/>
+                    </p>
+                </f:else>
+            </f:if>
+        </div>
+    </div>
+</div>

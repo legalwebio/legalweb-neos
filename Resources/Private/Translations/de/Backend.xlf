@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="LegalWeb.GdprTools" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="module.label">
+                <source>legalweb.io</source>
+            </trans-unit>
+            <trans-unit id="module.description">
+                <source>legalweb.io Daten aktualisieren und Nachrichten abrufen.</source>
+            </trans-unit>
+            <trans-unit id="latestUpdate">
+                <source>Letzte Aktualisierung: {0,datetime}</source>
+            </trans-unit>
+            <trans-unit id="domainId">
+                <source>Domain-ID: {0}</source>
+            </trans-unit>
+            <trans-unit id="noLatestUpdate">
+                <source>Es sind noch keine Daten vorhanden.</source>
+            </trans-unit>
+            <trans-unit id="updateNow">
+                <source>Daten jetzt aktualisieren</source>
+            </trans-unit>
+            <trans-unit id="messagesHeadline">
+                <source>Nachrichten</source>
+            </trans-unit>
+            <trans-unit id="noMessages">
+                <source>Keine Nachrichten vorhanden.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

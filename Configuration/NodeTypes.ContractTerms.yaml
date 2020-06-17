@@ -1,0 +1,8 @@
+'LegalWeb.GdprTools:ContractTerms':
+  superTypes:
+    'Neos.Neos:Content': true
+  ui:
+    label: i18n
+    icon: 'fas fa-file-alt'
+    position: 10
+    group: LegalWebGdprTools

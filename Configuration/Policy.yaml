@@ -1,0 +1,15 @@
+privilegeTargets:
+  'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
+    'LegalWeb.GdprTools:Backend':
+      matcher: 'method(LegalWeb\GdprTools\Controller\LegalWebModuleController->(index|update)Action())'
+    'LegalWeb.GdprTools:Public':
+      matcher: 'method(LegalWeb\GdprTools\Controller\LegalWebController->(update)Action())'
+roles:
+  'Neos.Neos:Administrator':
+    privileges:
+      - privilegeTarget: 'LegalWeb.GdprTools:Backend'
+        permission: GRANT
+  'Neos.Flow:Everybody':
+    privileges:
+      - privilegeTarget: 'LegalWeb.GdprTools:Public'
+        permission: GRANT

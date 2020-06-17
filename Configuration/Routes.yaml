@@ -1,0 +1,8 @@
+- name: 'Automatic update'
+  uriPattern: 'legalweb-gdprtools-update'
+  defaults:
+    '@package': 'LegalWeb.GdprTools'
+    '@controller': 'LegalWeb'
+    '@action': 'update'
+    '@format': 'html'
+  httpMethods: ['GET']

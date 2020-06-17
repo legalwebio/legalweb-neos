@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" product-name="LegalWeb.GdprTools" source-language="de" datatype="plaintext">
+        <body>
+            <trans-unit id="groups.LegalWebGdprTools" xml:space="preserve">
+                <source>legalweb.io GDPR Tools</source>
+            </trans-unit>
+            <trans-unit id="flashMessage.updateSucceeded">
+                <source>Die Daten wurden aktualisiert.</source>
+            </trans-unit>
+            <trans-unit id="flashMessage.updateFailed">
+                <source>Die Daten konnten nicht aktualisiert werden.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

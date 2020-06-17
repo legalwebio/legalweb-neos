@@ -1,0 +1,5 @@
+prototype(LegalWeb.GdprTools:Imprint) < prototype(Neos.Neos:ContentComponent) {
+    renderer = afx`
+        <div>{LegalWeb.GdprTools.Services.getImprint()}</div>
+    `
+}

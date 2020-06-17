@@ -1,0 +1,3 @@
+LegalWeb:
+  GdprTools:
+    apiUrl: 'https://dev.legalweb.io/api'

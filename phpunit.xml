@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<phpunit
+    beStrictAboutChangesToGlobalState="true"
+    beStrictAboutTestsThatDoNotTestAnything="true"
+    beStrictAboutOutputDuringTests="true"
+    bootstrap="../../../Build/BuildEssentials/PhpUnit/FunctionalTestBootstrap.php"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    timeoutForSmallTests="0"
+>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>./Tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="date.timezone" value="Europe/Vienna"/>
+    </php>
+</phpunit>

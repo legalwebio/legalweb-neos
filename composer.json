@@ -1,0 +1,43 @@
+{
+    "description": "Neos plugin for legalweb.io GDPR Tools",
+    "type": "neos-plugin",
+    "name": "legalwebio/legalweb-neos",
+    "require": {
+        "neos/neos": "~4.3.0",
+        "psr/log": "^1.1",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.18",
+        "phpstan/phpstan-deprecation-rules": "^0.12.2",
+        "phpstan/phpstan-doctrine": "^0.12.10",
+        "phpstan/phpstan-phpunit": "^0.12.6",
+        "phpstan/phpstan-strict-rules": "^0.12.2",
+        "phpunit/phpunit": "^7.5.1",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "LegalWeb\\GdprTools\\": "Classes"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LegalWeb\\GdprTools\\Tests\\": "Tests"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "LegalWeb.GdprTools"
+        }
+    },
+    "scripts": {
+        "test": [
+            "phpunit --colors=always --testdox"
+        ],
+        "check": [
+            "phpcs",
+            "phpstan analyse"
+        ]
+    }
+}

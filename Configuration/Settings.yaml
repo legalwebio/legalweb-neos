@@ -1,0 +1,49 @@
+LegalWeb:
+  GdprTools:
+    # Set `apiUrl` to the endpoint provided by legal web in their API documentation.
+    # For example: https://dev.legalweb.io/api
+    apiUrl: ''
+    # Set `apiKey` to the GUID provided by legal web.
+    # For example: d2ed9078-1ddd-426f-88d4-46a7cded8c88
+    apiKey: ''
+    # Set `callbackUrl` to the URL that legal web should call to trigger a dataset update.
+    # Use `{token}` as a placeholder for the configured `callbackToken`.
+    # For example: https://www.example.com/legalweb-gdprtools-update?token={token}
+    callbackUrl: ''
+    # Set `callbackToken` to a randomly generated URL-safe string.
+    # For example: 50.cp5q8nxZW_0YFGkTt1QfU3R~USkyBqwKasCjZrB-wbENoxbeFuirCJTRGuoC
+    callbackToken: ''
+Neos:
+  Flow:
+    mvc:
+      routes:
+        'LegalWeb.GdprTools':
+          position: 'after Neos.Neos'
+  Neos:
+    modules:
+      management:
+        submodules:
+          LegalWebGdprTools:
+            controller: \LegalWeb\GdprTools\Controller\LegalWebModuleController
+            label: 'LegalWeb.GdprTools:Backend:module.label'
+            description: 'LegalWeb.GdprTools:Backend:module.description'
+            icon: 'fas fa-gavel'
+            privilegeTarget: 'LegalWeb.GdprTools:Backend'
+    userInterface:
+      translation:
+        autoInclude:
+          LegalWeb.GdprTools:
+            - 'Main'
+            - 'Backend'
+            - 'NodeTypes/*'
+    fusion:
+      autoInclude:
+        LegalWeb.GdprTools: true
+    nodeTypes:
+      groups:
+        LegalWebGdprTools:
+          collapsed: true
+          label: 'LegalWeb.GdprTools:Main:groups.LegalWebGdprTools'
+  Fusion:
+    defaultContext:
+      'LegalWeb.GdprTools.Services': 'LegalWeb\GdprTools\Eel\ServicesHelper'
