@@ -1,6 +1,5 @@
 prototype(LegalWeb.GdprTools:DataProtectionStatement) < prototype(Neos.Neos:ContentComponent) {
     renderer = afx`
-        <LegalWeb.GdprTools:DataProtectionPopup />
         <div>{LegalWeb.GdprTools.Services.getDataProtectionStatement()}</div>
     `
 }
