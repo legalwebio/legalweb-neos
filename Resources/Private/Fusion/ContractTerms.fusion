@@ -2,4 +2,12 @@ prototype(LegalWeb.GdprTools:ContractTerms) < prototype(Neos.Neos:ContentCompone
     renderer = afx`
         <div>{LegalWeb.GdprTools.Services.getContractTerms()}</div>
     `
+
+    @cache {
+        mode = 'uncached'
+        context {
+            1 = 'node'
+            2 = 'documentNode'
+        }
+    }
 }

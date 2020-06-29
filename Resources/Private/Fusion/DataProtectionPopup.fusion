@@ -7,4 +7,12 @@ prototype(LegalWeb.GdprTools:DataProtectionPopup) < prototype(Neos.Neos:ContentC
         <script>{props.dataProtectionPopup.js}</script>
         <style>{props.dataProtectionPopup.css}</style>
     `
+
+    @cache {
+        mode = 'uncached'
+        context {
+            1 = 'node'
+            2 = 'documentNode'
+        }
+    }
 }
