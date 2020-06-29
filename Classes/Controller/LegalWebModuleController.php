@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Controller;
 
+use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
 use LegalWeb\GdprTools\Domain\Service\DatasetUpdateService;
 use LegalWeb\GdprTools\Domain\Service\GdprToolsService;
@@ -11,7 +12,9 @@ use LegalWeb\GdprTools\Exception\UpdateFailedException;
 use LegalWeb\GdprTools\LegalWebLoggerInterface;
 use Neos\Error\Messages\Message;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Exception;
 use Neos\Flow\Mvc\Exception\StopActionException;
+use Neos\Flow\Mvc\View\JsonView;
 use Neos\Neos\Controller\Module\AbstractModuleController;
 
 class LegalWebModuleController extends AbstractModuleController
@@ -66,5 +69,26 @@ class LegalWebModuleController extends AbstractModuleController
             $this->addFlashMessage('updateFailed', '', Message::SEVERITY_ERROR);
         }
         $this->redirect('index');
+    }
+
+    /**
+     * @param string $id
+     * @throws \Exception
+     */
+    public function showAction(string $id): void
+    {
+        $this->defaultViewObjectName = JsonView::class;
+        $this->view = $this->resolveView();
+        $this->view->assign('settings', $this->settings);
+        $this->view->setControllerContext($this->controllerContext);
+        $this->initializeView($this->view);
+
+        $dataset = $this->datasetRepository->findByIdentifier($id);
+
+        if ($dataset instanceof Dataset) {
+            $this->view->assign('value', json_decode($dataset->getJson(), true));
+        } else {
+            throw new Exception('Dataset not found', 1593445205279);
+        }
     }
 }

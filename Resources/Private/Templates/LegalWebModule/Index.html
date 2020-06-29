@@ -16,6 +16,7 @@
                 <f:then>
                     <p><f:translate id="latestUpdate" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.creationDateTime}"/></p>
                     <p><f:translate id="domainId" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.domainId}"/></p>
+                    <p><f:link.action action="show" format="json" arguments="{id: latestDataset.persistenceObjectIdentifier}" target="_blank">Daten anzeigen</f:link.action></p>
                 </f:then>
                 <f:else>
                     <p><f:translate id="noLatestUpdate" source="Backend" package="LegalWeb.GdprTools"/></p>

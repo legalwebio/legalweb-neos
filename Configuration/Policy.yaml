@@ -1,7 +1,7 @@
 privilegeTargets:
   'Neos\Flow\Security\Authorization\Privilege\Method\MethodPrivilege':
     'LegalWeb.GdprTools:Backend':
-      matcher: 'method(LegalWeb\GdprTools\Controller\LegalWebModuleController->(index|update)Action())'
+      matcher: 'method(LegalWeb\GdprTools\Controller\LegalWebModuleController->(index|update|show)Action())'
     'LegalWeb.GdprTools:Public':
       matcher: 'method(LegalWeb\GdprTools\Controller\LegalWebController->(update)Action())'
 roles:

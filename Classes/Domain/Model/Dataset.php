@@ -10,6 +10,7 @@ use Neos\Flow\Annotations as Flow;
 /**
  * @Flow\Entity
  * @ORM\Table(name="legalweb_gdprtools_dataset")
+ * @property string $Persistence_Object_Identifier
  */
 class Dataset
 {
@@ -35,6 +36,14 @@ class Dataset
         } catch (\Exception $e) {
             // @ignoreException
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getPersistenceObjectIdentifier(): string
+    {
+        return $this->Persistence_Object_Identifier;
     }
 
     /**
