@@ -36,6 +36,11 @@ class Configuration
     private $callbackToken;
 
     /**
+     * @var string[]
+     */
+    private $services;
+
+    /**
      * @param mixed[] $settings
      * @throws InvalidConfigurationException
      */
@@ -45,6 +50,7 @@ class Configuration
         $this->apiKey = $this->getSetting($settings, 'apiKey');
         $this->callbackUrl = $this->validateCallbackUrl($this->getSetting($settings, 'callbackUrl'));
         $this->callbackToken = $this->validateCallbackToken($this->getSetting($settings, 'callbackToken'));
+        $this->services = $this->getArraySetting($settings, 'services');
     }
 
     /**
@@ -72,6 +78,45 @@ class Configuration
                 'The %s setting must not be empty.',
                 $key
             ));
+        }
+        return $settings[$key];
+    }
+
+    /**
+     * @param mixed[] $settings
+     * @param string $key
+     *
+     * @return string[]
+     *
+     * @throws InvalidConfigurationException
+     */
+    private function getArraySetting(array $settings, string $key): array
+    {
+        if (!isset($settings[$key])) {
+            throw new InvalidConfigurationException(sprintf(
+                'The %s setting must be provided.',
+                $key
+            ));
+        }
+        if (!is_array($settings[$key])) {
+            throw new InvalidConfigurationException(sprintf(
+                'The %s setting must be contain an array.',
+                $key
+            ));
+        }
+        if (count($settings[$key]) === 0) {
+            throw new InvalidConfigurationException(sprintf(
+                'The %s setting must not be empty.',
+                $key
+            ));
+        }
+        foreach ($settings[$key] as $setting) {
+            if (!is_string($setting)) {
+                throw new InvalidConfigurationException(sprintf(
+                    'The %s setting must contain only strings.',
+                    $key
+                ));
+            }
         }
         return $settings[$key];
     }
@@ -136,5 +181,13 @@ class Configuration
     public function getCallbackToken(): string
     {
         return $this->callbackToken;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getServices(): array
+    {
+        return $this->services;
     }
 }

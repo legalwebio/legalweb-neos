@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Tests\Unit\Domain\Service;
 
+use LegalWeb\GdprTools\Configuration\Configuration;
 use LegalWeb\GdprTools\Domain\Service\DatasetValidationService;
 use Neos\Flow\Tests\UnitTestCase;
 
@@ -19,6 +20,9 @@ class DatasetValidationServiceTest extends UnitTestCase
         parent::setUp();
 
         $this->datasetValidationService = new DatasetValidationService();
+        $configuration = $this->createMock(Configuration::class);
+        $configuration->method('getServices')->willReturn(['imprint']);
+        $this->inject($this->datasetValidationService, 'configuration', $configuration);
     }
 
     public function testValidData(): void
@@ -92,5 +96,21 @@ class DatasetValidationServiceTest extends UnitTestCase
         ]));
 
         $this->assertEquals(['Decoded JSON does not contain "services" key'], $errors);
+    }
+
+    public function testMissingService(): void
+    {
+        $errors = $this->datasetValidationService->validate(json_encode([
+            'domain' => [
+                'domain_id' => '1234'
+            ],
+            'services' => [
+                // Configuration mock returns ['imprint'] as expected services, so this test should fail because
+                // it does not contain all configured services.
+                'contractterms',
+            ]
+        ]));
+
+        $this->assertEquals(['Missing service "imprint"'], $errors);
     }
 }

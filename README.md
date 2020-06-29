@@ -39,6 +39,10 @@ LegalWeb:
     # Set `callbackToken` to a randomly generated URL-safe string.
     # For example: 50.cp5q8nxZW_0YFGkTt1QfU3R~USkyBqwKasCjZrB-wbENoxbeFuirCJTRGuoC
     callbackToken: ''
+    # Set `services` to an array of strings, each item corresponding to a key that is expected in the
+    # `services` section of the API response.
+    # For example: ['imprint', 'contractterms', 'dppopup', 'dppopupconfig', 'dppopupcss', 'dppopupjs']
+    services: []
 ```
 
 Set up a cronjob that executes `./flow legalweb:update`.

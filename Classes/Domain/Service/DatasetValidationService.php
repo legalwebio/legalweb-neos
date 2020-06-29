@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Domain\Service;
 
+use LegalWeb\GdprTools\Configuration\Configuration;
 use Neos\Flow\Annotations as Flow;
 
-/**
- * @Flow\Proxy(false)
- */
 class DatasetValidationService
 {
+    /**
+     * @Flow\Inject
+     * @var Configuration
+     */
+    protected $configuration;
+
     /**
      * @param string $json
      * @return string[]
@@ -31,16 +35,7 @@ class DatasetValidationService
             return ['Decoded JSON does not contain "domain_id" key in "domain" key'];
         }
         $errors = [];
-        $expectedServices = [
-            'imprint',
-            'dpstatement',
-            'contractterms',
-            'dppopup',
-            'dppopupconfig',
-            'dppopupcss',
-            'dppopupjs'
-        ];
-        foreach ($expectedServices as $service) {
+        foreach ($this->configuration->getServices() as $service) {
             if (!isset($decoded['services'][$service])) {
                 $errors[] = 'Missing service "' . $service . '"';
             }

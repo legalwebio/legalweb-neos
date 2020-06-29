@@ -25,7 +25,7 @@ class ConfigurationTest extends UnitTestCase
     }
 
     /**
-     *
+     * @throws \Exception
      */
     public function testValid(): void
     {
@@ -47,11 +47,16 @@ class ConfigurationTest extends UnitTestCase
             'CT74.TSzcQWiVXZen2TP0eDf9_ByWT1vDT~sTD6wh5fSG-mrjQaljCH5yMxWFzo',
             $this->configuration->getCallbackToken()
         );
+        $this->assertEquals(
+            ['imprint'],
+            $this->configuration->getServices()
+        );
     }
 
     /**
      * @dataProvider invalidDataProvider
      * @param array<string, string> $settings
+     * @throws \Exception
      */
     public function testInvalid(array $settings): void
     {
@@ -81,6 +86,10 @@ class ConfigurationTest extends UnitTestCase
             'non-string callbackToken' => [[array_merge($this->validData(), ['callbackToken' => null])]],
             'missing token placeholder in callbackUrl' => [[array_merge($this->validData(), ['callbackUrl' => 'https://www.example.com/'])]],
             'invalid character in callbackToken' => [[array_merge($this->validData(), ['callbackToken' => 'in!valid'])]],
+            'missing services' => [[$this->unsetKey($this->validData(), 'services')]],
+            'empty services' => [[array_merge($this->validData(), ['services' => []])]],
+            'services not array' => [[array_merge($this->validData(), ['services' => ''])]],
+            'services contains non-string' => [[array_merge($this->validData(), ['services' => [1]])]],
         ];
     }
 
@@ -94,6 +103,7 @@ class ConfigurationTest extends UnitTestCase
             'apiKey' => '7f4d86bb-4d44-4285-864f-65fca6e6b2cd',
             'callbackUrl' => 'https://www.example.com?token={token}',
             'callbackToken' => 'CT74.TSzcQWiVXZen2TP0eDf9_ByWT1vDT~sTD6wh5fSG-mrjQaljCH5yMxWFzo',
+            'services' => ['imprint']
         ];
     }
 
