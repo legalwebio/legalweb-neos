@@ -21,6 +21,10 @@ Then require the package:
 
 ```composer require legalwebio/legalweb-neos:@dev```
 
+And run the migrations:
+
+```./flow doctrine:migrate```
+
 ### Configuration
 
 ```
