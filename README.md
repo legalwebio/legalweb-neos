@@ -6,31 +6,37 @@
 
 ## Installation
 
+The package is currently not registered at packagist so you have to install it manually:
+
 Configure composer to use github repository:
 
-```
+```json
     "repositories": [
         {
-            "type": "vcs",
-            "url": "git@github.com:legalwebio/legalweb-neos.git"
-        },
-    ],
+            "type": "github",
+            "url": "https://github.com/legalwebio/legalweb-neos"
+        }
+    ]
 ```
 
 Then require the package:
 
-```composer require legalwebio/legalweb-neos:@dev```
+```bash
+composer require "legalwebio/legalweb-neos:@dev"
+```
 
 And run the migrations:
 
-```./flow doctrine:migrate```
+```bash
+./flow doctrine:migrate
+```
 
 Open the legalweb.io backend module and click "Daten jetzt aktualisieren".
 This will download the current dataset from the legalweb.io API.
 
 ### Configuration
 
-```
+```yaml
 LegalWeb:
   GdprTools:
     # Set `apiUrl` to the endpoint provided by legal web in their API documentation.
