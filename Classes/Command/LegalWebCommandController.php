@@ -10,6 +10,9 @@ use LegalWeb\GdprTools\LegalWebLoggerInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
 
+/**
+ * @Flow\Scope("singleton")
+ */
 class LegalWebCommandController extends CommandController
 {
     /**
@@ -27,7 +30,7 @@ class LegalWebCommandController extends CommandController
     /**
      * @param bool $force
      */
-    public function updateAction(bool $force = false): void
+    public function updateCommand(bool $force = false): void
     {
         try {
             $this->datasetUpdateService->update($force);
