@@ -19,7 +19,7 @@ Configure composer to use github repository:
 
 Then require the package:
 
-```composer require legalwebio/legalweb-neos```
+```composer require legalwebio/legalweb-neos:@dev```
 
 ### Configuration
 
