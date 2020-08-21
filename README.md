@@ -47,7 +47,7 @@ LegalWeb:
 
 Set up a cronjob that executes `./flow legalweb:update`.
 
-Ensure that the `LegalWeb.GdprTools:DataProtectionPopup` fusion component is included in every page. 
+Ensure that the `LegalWeb.GdprTools:Component.DataProtectionPopup` fusion component is included in every page.
 
 ## Features
 
