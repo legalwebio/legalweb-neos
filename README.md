@@ -25,6 +25,9 @@ And run the migrations:
 
 ```./flow doctrine:migrate```
 
+Open the legalweb.io backend module and click "Daten jetzt aktualisieren".
+This will download the current dataset from the legalweb.io API.
+
 ### Configuration
 
 ```
@@ -51,7 +54,11 @@ LegalWeb:
 
 Set up a cronjob that executes `./flow legalweb:update`.
 
-Ensure that the `LegalWeb.GdprTools:DataProtectionPopup` fusion component is included in every page. 
+Ensure that the `LegalWeb.GdprTools:DataProtectionPopup` fusion component is included in every page before the closing `body` tag.
+
+Replace the content of your imprint, contract terms and data protection pages with the nodes `LegalWeb.GdprTools:Imprint`, `LegalWeb.GdprTools:ContractTerms` and `LegalWeb.GdprTools:DataProtectionStatement` respectively.
+
+![Screenshot of node creation dialog](https://user-images.githubusercontent.com/4510166/90875089-e9806600-e3a0-11ea-8873-5ba934cf72bc.png)
 
 ## Features
 
