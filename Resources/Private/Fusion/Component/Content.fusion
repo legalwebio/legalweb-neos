@@ -1,0 +1,17 @@
+prototype(LegalWeb.GdprTools:Component.Content) < prototype(Neos.Neos:ContentComponent) {
+    tagName = 'div'
+    attributes = Neos.Fusion:Attributes
+    content = null
+
+    renderer = Neos.Fusion:Tag {
+        @apply.props = ${props}
+    }
+
+    @cache {
+        mode = 'uncached'
+        context {
+            1 = 'node'
+            2 = 'documentNode'
+        }
+    }
+}

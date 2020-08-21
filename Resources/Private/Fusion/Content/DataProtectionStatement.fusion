@@ -1,0 +1,3 @@
+prototype(LegalWeb.GdprTools:Content.DataProtectionStatement) < prototype(LegalWeb.GdprTools:Component.Content) {
+    content = ${LegalWeb.GdprTools.Services.getDataProtectionStatement()}
+}

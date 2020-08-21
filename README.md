@@ -54,7 +54,7 @@ LegalWeb:
 
 Set up a cronjob that executes `./flow legalweb:update`.
 
-Ensure that the `LegalWeb.GdprTools:DataProtectionPopup` fusion component is included in every page before the closing `body` tag.
+Ensure that the `LegalWeb.GdprTools:Component.DataProtectionPopup` fusion component is included in every page before the closing `body` tag.
 
 Replace the content of your imprint, contract terms and data protection pages with the nodes `LegalWeb.GdprTools:Imprint`, `LegalWeb.GdprTools:ContractTerms` and `LegalWeb.GdprTools:DataProtectionStatement` respectively.
 

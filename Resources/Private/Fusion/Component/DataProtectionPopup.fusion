@@ -1,4 +1,4 @@
-prototype(LegalWeb.GdprTools:DataProtectionPopup) < prototype(Neos.Neos:ContentComponent) {
+prototype(LegalWeb.GdprTools:Component.DataProtectionPopup) < prototype(Neos.Fusion:Component) {
     dataProtectionPopup = ${LegalWeb.GdprTools.Services.getDataProtectionPopup()}
     configJs = ${Array.join(Array.map(this.dataProtectionPopup.config, (value, key) => 'window.' + key + ' = ' + Json.stringify(value) + ';'), '')}
     renderer = afx`

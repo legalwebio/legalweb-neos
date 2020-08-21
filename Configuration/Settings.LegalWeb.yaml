@@ -17,37 +17,3 @@ LegalWeb:
     # `services` section of the API response.
     # For example: ['imprint', 'contractterms', 'dppopup', 'dppopupconfig', 'dppopupcss', 'dppopupjs']
     services: []
-Neos:
-  Flow:
-    mvc:
-      routes:
-        'LegalWeb.GdprTools':
-          position: 'after Neos.Neos'
-  Neos:
-    modules:
-      management:
-        submodules:
-          LegalWebGdprTools:
-            controller: \LegalWeb\GdprTools\Controller\LegalWebModuleController
-            label: 'LegalWeb.GdprTools:Backend:module.label'
-            description: 'LegalWeb.GdprTools:Backend:module.description'
-            icon: 'fas fa-gavel'
-            privilegeTarget: 'LegalWeb.GdprTools:Backend'
-    userInterface:
-      translation:
-        autoInclude:
-          LegalWeb.GdprTools:
-            - 'Main'
-            - 'Backend'
-            - 'NodeTypes/*'
-    fusion:
-      autoInclude:
-        LegalWeb.GdprTools: true
-    nodeTypes:
-      groups:
-        LegalWebGdprTools:
-          collapsed: true
-          label: 'LegalWeb.GdprTools:Main:groups.LegalWebGdprTools'
-  Fusion:
-    defaultContext:
-      'LegalWeb.GdprTools.Services': 'LegalWeb\GdprTools\Eel\ServicesHelper'
