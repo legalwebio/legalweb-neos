@@ -27,7 +27,7 @@ Then require the package:
 LegalWeb:
   GdprTools:
     # Set `apiUrl` to the endpoint provided by legal web in their API documentation.
-    # For example: https://dev.legalweb.io/api
+    # For example: https://legalweb.io/api
     apiUrl: ''
     # Set `apiKey` to the GUID provided by legal web.
     # For example: d2ed9078-1ddd-426f-88d4-46a7cded8c88 
