@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Domain\Service;
 
+use LegalWeb\GdprTools\Configuration\Configuration;
 use LegalWeb\GdprTools\Domain\Model\DataProtectionPopup;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
@@ -18,40 +19,50 @@ class GdprToolsService
     protected $datasetRepository;
 
     /**
+     * @Flow\Inject
+     * @var Configuration
+     */
+    protected $configuration;
+
+    /**
+     * @param string|null $language
      * @return string
      */
-    public function getImprint(): string
+    public function getImprint(string $language = null): string
     {
         $services = $this->getServices();
-        return $services['imprint']['de'];
+        return $this->getByLanguage($services['imprint'], $language);
     }
 
     /**
+     * @param string|null $language
      * @return string
      */
-    public function getDataProtectionStatement(): string
+    public function getDataProtectionStatement(string $language = null): string
     {
         $services = $this->getServices();
-        return $services['dpstatement']['de'];
+        return $this->getByLanguage($services['dpstatement'], $language);
     }
 
     /**
+     * @param string|null $language
      * @return string
      */
-    public function getContractTerms(): string
+    public function getContractTerms(string $language = null): string
     {
         $services = $this->getServices();
-        return $services['contractterms']['de'];
+        return $this->getByLanguage($services['contractterms'], $language);
     }
 
     /**
+     * @param string|null $language
      * @return DataProtectionPopup
      */
-    public function getDataProtectionPopup(): DataProtectionPopup
+    public function getDataProtectionPopup(string $language = null): DataProtectionPopup
     {
         $services = $this->getServices();
         return new DataProtectionPopup(
-            $services['dppopup']['de'],
+            $this->getByLanguage($services['dppopup'], $language),
             $services['dppopupconfig'],
             $services['dppopupcss'],
             $services['dppopupjs'],
@@ -64,6 +75,19 @@ class GdprToolsService
     public function getMessages(): array
     {
         return [];
+    }
+
+    /**
+     * @param mixed[] $data
+     * @param string|null $language
+     * @return string
+     */
+    private function getByLanguage(array $data, string $language = null): string
+    {
+        if (is_string($language) && isset($data[$language])) {
+            return $data[$language];
+        }
+        return $data[$this->configuration->getFallbackLanguage()];
     }
 
     /**

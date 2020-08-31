@@ -56,6 +56,10 @@ LegalWeb:
     # `services` section of the API response.
     # For example: ['imprint', 'contractterms', 'dppopup', 'dppopupconfig', 'dppopupcss', 'dppopupjs']
     services: []
+    # The language to use for imprint, data protection popup etc. if no language is passed to the eel helper
+    # or if the language passed to the eel helper does not exist in the dataset.
+    # For example: de
+    fallbackLanguage: ''
 ```
 
 Set up a cronjob that executes `./flow legalweb:update`.

@@ -41,16 +41,22 @@ class Configuration
     private $services;
 
     /**
+     * @var string
+     */
+    private $fallbackLanguage;
+
+    /**
      * @param mixed[] $settings
      * @throws InvalidConfigurationException
      */
     public function injectSettings(array $settings): void
     {
-        $this->apiUrl = $this->getSetting($settings, 'apiUrl');
-        $this->apiKey = $this->getSetting($settings, 'apiKey');
-        $this->callbackUrl = $this->validateCallbackUrl($this->getSetting($settings, 'callbackUrl'));
-        $this->callbackToken = $this->validateCallbackToken($this->getSetting($settings, 'callbackToken'));
+        $this->apiUrl = $this->getStringSetting($settings, 'apiUrl');
+        $this->apiKey = $this->getStringSetting($settings, 'apiKey');
+        $this->callbackUrl = $this->validateCallbackUrl($this->getStringSetting($settings, 'callbackUrl'));
+        $this->callbackToken = $this->validateCallbackToken($this->getStringSetting($settings, 'callbackToken'));
         $this->services = $this->getArraySetting($settings, 'services');
+        $this->fallbackLanguage = $this->getStringSetting($settings, 'fallbackLanguage');
     }
 
     /**
@@ -59,7 +65,7 @@ class Configuration
      * @return string
      * @throws InvalidConfigurationException
      */
-    private function getSetting(array $settings, string $key): string
+    private function getStringSetting(array $settings, string $key): string
     {
         if (!isset($settings[$key])) {
             throw new InvalidConfigurationException(sprintf(
@@ -189,5 +195,13 @@ class Configuration
     public function getServices(): array
     {
         return $this->services;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFallbackLanguage(): string
+    {
+        return $this->fallbackLanguage;
     }
 }

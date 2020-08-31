@@ -18,35 +18,39 @@ class ServicesHelper implements ProtectedContextAwareInterface
     protected $gdprToolsService;
 
     /**
+     * @param string|null $language
      * @return string
      */
-    public function getImprint(): string
+    public function getImprint(string $language = null): string
     {
-        return $this->gdprToolsService->getImprint();
+        return $this->gdprToolsService->getImprint($language);
     }
 
     /**
+     * @param string|null $language
      * @return string
      */
-    public function getDataProtectionStatement(): string
+    public function getDataProtectionStatement(string $language = null): string
     {
-        return $this->gdprToolsService->getDataProtectionStatement();
+        return $this->gdprToolsService->getDataProtectionStatement($language);
     }
 
     /**
+     * @param string|null $language
      * @return string
      */
-    public function getContractTerms(): string
+    public function getContractTerms(string $language = null): string
     {
-        return $this->gdprToolsService->getContractTerms();
+        return $this->gdprToolsService->getContractTerms($language);
     }
 
     /**
+     * @param string|null $language
      * @return DataProtectionPopup
      */
-    public function getDataProtectionPopup(): DataProtectionPopup
+    public function getDataProtectionPopup(string $language = null): DataProtectionPopup
     {
-        return $this->gdprToolsService->getDataProtectionPopup();
+        return $this->gdprToolsService->getDataProtectionPopup($language);
     }
 
     /**

@@ -51,6 +51,10 @@ class ConfigurationTest extends UnitTestCase
             ['imprint'],
             $this->configuration->getServices()
         );
+        $this->assertEquals(
+            'de',
+            $this->configuration->getFallbackLanguage()
+        );
     }
 
     /**
@@ -76,14 +80,17 @@ class ConfigurationTest extends UnitTestCase
             'missing apiKey' => [[$this->unsetKey($this->validData(), 'apiKey')]],
             'missing callbackUrl' => [[$this->unsetKey($this->validData(), 'callbackUrl')]],
             'missing callbackToken' => [[$this->unsetKey($this->validData(), 'callbackToken')]],
+            'missing fallbackLanguage' => [[$this->unsetKey($this->validData(), 'fallbackLanguage')]],
             'empty apiUrl' => [[array_merge($this->validData(), ['apiUrl' => ''])]],
             'empty apiKey' => [[array_merge($this->validData(), ['apiKey' => ''])]],
             'empty callbackUrl' => [[array_merge($this->validData(), ['callbackUrl' => ''])]],
             'empty callbackToken' => [[array_merge($this->validData(), ['callbackToken' => ''])]],
+            'empty fallbackLanguage' => [[array_merge($this->validData(), ['fallbackLanguage' => ''])]],
             'non-string apiUrl' => [[array_merge($this->validData(), ['apiUrl' => 1])]],
             'non-string apiKey' => [[array_merge($this->validData(), ['apiKey' => false])]],
             'non-string callbackUrl' => [[array_merge($this->validData(), ['callbackUrl' => new \DateTimeImmutable()])]],
             'non-string callbackToken' => [[array_merge($this->validData(), ['callbackToken' => null])]],
+            'non-string fallbackLanguage' => [[array_merge($this->validData(), ['fallbackLanguage' => 42])]],
             'missing token placeholder in callbackUrl' => [[array_merge($this->validData(), ['callbackUrl' => 'https://www.example.com/'])]],
             'invalid character in callbackToken' => [[array_merge($this->validData(), ['callbackToken' => 'in!valid'])]],
             'missing services' => [[$this->unsetKey($this->validData(), 'services')]],
@@ -103,7 +110,8 @@ class ConfigurationTest extends UnitTestCase
             'apiKey' => '7f4d86bb-4d44-4285-864f-65fca6e6b2cd',
             'callbackUrl' => 'https://www.example.com?token={token}',
             'callbackToken' => 'CT74.TSzcQWiVXZen2TP0eDf9_ByWT1vDT~sTD6wh5fSG-mrjQaljCH5yMxWFzo',
-            'services' => ['imprint']
+            'services' => ['imprint'],
+            'fallbackLanguage' => 'de'
         ];
     }
 
