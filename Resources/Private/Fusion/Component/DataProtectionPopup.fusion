@@ -13,10 +13,16 @@ prototype(LegalWeb.GdprTools:Component.DataProtectionPopup) < prototype(Neos.Fus
     `
 
     @cache {
-        mode = 'uncached'
-        context {
-            1 = 'node'
-            2 = 'documentNode'
+        mode = 'cached'
+        entryIdentifier {
+            node = ${node}
+            editPreviewMode = ${node.context.currentRenderingMode.name}
+            customId = 'popup'
+        }
+        entryTags {
+            1 = ${Neos.Caching.nodeTag(node)}
+            2 = ${Neos.Caching.descendantOfTag(node)}
+            3 = 'LegalWeb-DataProtectionPopup-Cache-EntryTag'
         }
     }
 }

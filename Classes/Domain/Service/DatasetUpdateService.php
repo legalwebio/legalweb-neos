@@ -13,6 +13,7 @@ use LegalWeb\GdprTools\Exception\UpdateFailedException;
 use LegalWeb\GdprTools\LegalWebLoggerInterface;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
+use Neos\Fusion\Core\Cache\ContentCache;
 
 class DatasetUpdateService
 {
@@ -53,6 +54,12 @@ class DatasetUpdateService
     protected $datasetValidationService;
 
     /**
+     * @Flow\Inject
+     * @var ContentCache
+     */
+    protected $contentCache;
+
+    /**
      * @param bool $force
      * @return bool
      * @throws UpdateFailedException
@@ -72,6 +79,8 @@ class DatasetUpdateService
             if (count($validationErrors) === 0) {
                 $this->storeResponse($response);
                 $this->logger->info('Stored new dataset');
+                $this->contentCache->flushByTag('LegalWeb-DataProtectionPopup-Cache-EntryTag');
+                $this->logger->info('Flushed popup cache');
                 return true;
             }
             throw new UpdateFailedException(
