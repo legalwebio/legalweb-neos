@@ -79,8 +79,8 @@ class DatasetUpdateService
             if (count($validationErrors) === 0) {
                 $this->storeResponse($response);
                 $this->logger->info('Stored new dataset');
-                $this->contentCache->flushByTag('LegalWeb-DataProtectionPopup-Cache-EntryTag');
-                $this->logger->info('Flushed popup cache');
+                $this->contentCache->flushByTag('LegalWeb-DataProtection-Cache-EntryTag');
+                $this->logger->info('Flushed LegalWeb DataProtection cache');
                 return true;
             }
             throw new UpdateFailedException(
