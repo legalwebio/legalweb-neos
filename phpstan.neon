@@ -4,6 +4,8 @@ parameters:
     level: max
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - "/deprecated method getDimensions/"
 includes:
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - vendor/phpstan/phpstan-doctrine/extension.neon
