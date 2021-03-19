@@ -2,7 +2,7 @@
 
 ## Requirements
 
-```"neos/neos": "~4.3.0"```
+`"neos/neos": "~4.3.0"` or `"neos/neos": "~5.3.0"`
 
 ## Installation
 
@@ -30,9 +30,6 @@ And run the migrations:
 ```bash
 ./flow doctrine:migrate
 ```
-
-Open the legalweb.io backend module and click "Daten jetzt aktualisieren".
-This will download the current dataset from the legalweb.io API.
 
 ### Configuration
 
@@ -64,7 +61,12 @@ LegalWeb:
 
 Set up a cronjob that executes `./flow legalweb:update`.
 
-Ensure that the `LegalWeb.GdprTools:Component.DataProtectionPopup` fusion component is included in every page before the closing `body` tag.
+Open the legalweb.io backend module and click "Daten jetzt aktualisieren".
+This will download the current dataset from the legalweb.io API.
+
+Ensure that the `LegalWeb.GdprTools:Component.DataProtectionPopup` fusion component is included in every page at the beginning of the `body` tag.
+The component must be included at the top because it loads JS which will automatically block embedded contents like videos.
+If you include the JS at the bottom of the body tag, it will not be able to block video loading.
 
 Replace the content of your imprint, contract terms and data protection pages with the nodes `LegalWeb.GdprTools:Imprint`, `LegalWeb.GdprTools:ContractTerms` and `LegalWeb.GdprTools:DataProtectionStatement` respectively.
 
