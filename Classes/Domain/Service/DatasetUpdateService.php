@@ -37,12 +37,6 @@ class DatasetUpdateService
 
     /**
      * @Flow\Inject
-     * @var Client
-     */
-    protected $guzzleClient;
-
-    /**
-     * @Flow\Inject
      * @var LegalWebLoggerInterface
      */
     protected $logger;
@@ -112,7 +106,8 @@ class DatasetUpdateService
      */
     protected function fetchDataset(): string
     {
-        return $this->guzzleClient->request(
+        $client = new Client();
+        return $client->request(
             'POST',
             $this->configuration->getApiUrl(),
             [
