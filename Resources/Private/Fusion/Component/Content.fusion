@@ -8,10 +8,15 @@ prototype(LegalWeb.GdprTools:Component.Content) < prototype(Neos.Neos:ContentCom
     }
 
     @cache {
-        mode = 'uncached'
-        context {
-            1 = 'node'
-            2 = 'documentNode'
+        mode = 'cached'
+        entryIdentifier {
+            node = ${node}
+            editPreviewMode = ${node.context.currentRenderingMode.name}
+            customId = 'content'
+        }
+        entryTags {
+            1 = ${Neos.Caching.nodeTag(node)}
+            2 = 'LegalWeb-DataProtection-Cache-EntryTag'
         }
     }
 }
