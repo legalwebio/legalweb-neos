@@ -40,7 +40,7 @@ LegalWeb:
     # For example: https://legalweb.io/api
     apiUrl: ''
     # Set `apiKey` to the GUID provided by legal web.
-    # For example: d2ed9078-1ddd-426f-88d4-46a7cded8c88 
+    # For example: d2ed9078-1ddd-426f-88d4-46a7cded8c88
     apiKey: ''
     # Set `callbackUrl` to the URL that legal web should call to trigger a dataset update.
     # Use `{token}` as a placeholder for the configured `callbackToken`.
@@ -51,7 +51,13 @@ LegalWeb:
     callbackToken: ''
     # Set `services` to an array of strings, each item corresponding to a key that is expected in the
     # `services` section of the API response.
-    # For example: ['imprint', 'contractterms', 'dppopup', 'dppopupconfig', 'dppopupcss', 'dppopupjs']
+    # Make sure to only configure services here which are also enabled in the legal web dashboard for this project.
+    # The available services are:
+    # * imprint ("Impressum")
+    # * contractterms ("AGB")
+    # * dpstatement ("Datenschutzerklärung")
+    # * dppopup, dppopupconfig, dppopupcss, dppopupjs ("Cookie-Dialog", use all four or none)
+    # For example: ['imprint', 'contractterms', 'dpstatement', 'dppopup', 'dppopupconfig', 'dppopupcss', 'dppopupjs']
     services: []
     # The language to use for imprint, data protection popup etc. if no language is passed to the eel helper
     # or if the language passed to the eel helper does not exist in the dataset.
