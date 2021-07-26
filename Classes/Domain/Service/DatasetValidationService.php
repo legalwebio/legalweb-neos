@@ -37,7 +37,7 @@ class DatasetValidationService
         $errors = [];
         foreach ($this->configuration->getServices() as $service) {
             if (!isset($decoded['services'][$service])) {
-                $errors[] = 'Missing service "' . $service . '"';
+                $errors[] = 'The service "' . $service . '" is configured but missing from the API response';
             }
         }
         return $errors;
