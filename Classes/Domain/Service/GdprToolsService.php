@@ -8,6 +8,7 @@ use LegalWeb\GdprTools\Configuration\Configuration;
 use LegalWeb\GdprTools\Domain\Model\DataProtectionPopup;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
+use LegalWeb\GdprTools\LegalWebLoggerInterface;
 use Neos\Flow\Annotations as Flow;
 
 class GdprToolsService
@@ -25,13 +26,18 @@ class GdprToolsService
     protected $configuration;
 
     /**
+     * @Flow\Inject
+     * @var LegalWebLoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @param string|null $language
      * @return string
      */
     public function getImprint(string $language = null): string
     {
-        $services = $this->getServices();
-        return $this->getByLanguage($services['imprint'], $language);
+        return $this->getService('imprint', $language);
     }
 
     /**
@@ -40,8 +46,7 @@ class GdprToolsService
      */
     public function getDataProtectionStatement(string $language = null): string
     {
-        $services = $this->getServices();
-        return $this->getByLanguage($services['dpstatement'], $language);
+        return $this->getService('dpstatement', $language);
     }
 
     /**
@@ -50,8 +55,7 @@ class GdprToolsService
      */
     public function getContractTerms(string $language = null): string
     {
-        $services = $this->getServices();
-        return $this->getByLanguage($services['contractterms'], $language);
+        return $this->getService('contractterms', $language);
     }
 
     /**
@@ -62,7 +66,7 @@ class GdprToolsService
     {
         $services = $this->getServices();
         return new DataProtectionPopup(
-            $this->getByLanguage($services['dppopup'], $language),
+            $this->getService('dppopup', $language),
             $services['dppopupconfig'],
             $services['dppopupcss'],
             $services['dppopupjs'],
@@ -96,6 +100,20 @@ class GdprToolsService
     private function getServices(): array
     {
         return $this->getDatasetData()['services'] ?? [];
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $language
+     * @return string
+     */
+    private function getService(string $key, string $language = null): string
+    {
+        $services = $this->getServices();
+        if (!isset($services[$key])) {
+            $this->logger->error(sprintf('Attempted to load missing service "%s"', $key));
+        }
+        return $this->getByLanguage($services[$key], $language);
     }
 
     /**
