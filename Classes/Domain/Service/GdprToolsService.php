@@ -112,6 +112,7 @@ class GdprToolsService
         $services = $this->getServices();
         if (!isset($services[$key])) {
             $this->logger->error(sprintf('Attempted to load missing service "%s"', $key));
+            return '';
         }
         return $this->getByLanguage($services[$key], $language);
     }
