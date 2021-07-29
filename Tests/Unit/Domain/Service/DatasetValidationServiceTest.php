@@ -6,111 +6,154 @@ namespace LegalWeb\GdprTools\Tests\Unit\Domain\Service;
 
 use LegalWeb\GdprTools\Configuration\Configuration;
 use LegalWeb\GdprTools\Domain\Service\DatasetValidationService;
-use Neos\Flow\Tests\UnitTestCase;
+use LegalWeb\GdprTools\Exception\InvalidDatasetException;
+use LegalWeb\GdprTools\Tests\Unit\TestCase;
 
-class DatasetValidationServiceTest extends UnitTestCase
+class DatasetValidationServiceTest extends TestCase
 {
     /**
      * @var DatasetValidationService
      */
     protected $datasetValidationService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
-
         $this->datasetValidationService = new DatasetValidationService();
-        $configuration = $this->createMock(Configuration::class);
-        $configuration->method('getServices')->willReturn(['imprint']);
-        $this->inject($this->datasetValidationService, 'configuration', $configuration);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testValidData(): void
     {
-        $errors = $this->datasetValidationService->validate(json_encode([
-            'domain' => [
-                'domain_id' => '1234'
-            ],
-            'services' => [
-                'imprint' => '',
-                'dpstatement' => '',
-                'contractterms' => '',
-                'dppopup' => '',
-                'dppopupconfig' => '',
-                'dppopupcss' => '',
-                'dppopupjs' => '',
-            ],
-        ]));
+        static::expectNotToPerformAssertions();
 
-        $this->assertEquals([], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            json_encode([
+                'domain' => [
+                    'domain_id' => '1234'
+                ],
+                'services' => [
+                    'imprint' => '',
+                    'dpstatement' => '',
+                    'contractterms' => '',
+                    'dppopup' => '',
+                    'dppopupconfig' => '',
+                    'dppopupcss' => '',
+                    'dppopupjs' => '',
+                ],
+            ], JSON_THROW_ON_ERROR)
+        );
     }
 
     public function testInvalidJson(): void
     {
-        $errors = $this->datasetValidationService->validate('[}');
+        static::expectException(InvalidDatasetException::class);
+        static::expectExceptionMessage(
+            'Invalid dataset: Decoded JSON is not an array.'
+        );
 
-        $this->assertEquals(['Decoded JSON is not an array'], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            '[}'
+        );
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMissingDomain(): void
     {
-        $errors = $this->datasetValidationService->validate(json_encode([
-            'services' => [
-                'imprint' => '',
-                'dpstatement' => '',
-                'contractterms' => '',
-                'dppopup' => '',
-                'dppopupconfig' => '',
-                'dppopupcss' => '',
-                'dppopupjs' => '',
-            ],
-        ]));
+        static::expectException(InvalidDatasetException::class);
+        static::expectExceptionMessage(
+            'Invalid dataset: Decoded JSON does not contain "domain" key.'
+        );
 
-        $this->assertEquals(['Decoded JSON does not contain "domain" key'], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            json_encode([
+                'services' => [
+                    'imprint' => '',
+                    'dpstatement' => '',
+                    'contractterms' => '',
+                    'dppopup' => '',
+                    'dppopupconfig' => '',
+                    'dppopupcss' => '',
+                    'dppopupjs' => '',
+                ],
+            ], JSON_THROW_ON_ERROR)
+        );
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMissingDomainId(): void
     {
-        $errors = $this->datasetValidationService->validate(json_encode([
-            'domain' => [],
-            'services' => [
-                'imprint' => '',
-                'dpstatement' => '',
-                'contractterms' => '',
-                'dppopup' => '',
-                'dppopupconfig' => '',
-                'dppopupcss' => '',
-                'dppopupjs' => '',
-            ],
-        ]));
+        static::expectException(InvalidDatasetException::class);
+        static::expectExceptionMessage(
+            'Invalid dataset: Decoded JSON does not contain "domain_id" key in "domain" key.'
+        );
 
-        $this->assertEquals(['Decoded JSON does not contain "domain_id" key in "domain" key'], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            json_encode([
+                'domain' => [],
+                'services' => [
+                    'imprint' => '',
+                    'dpstatement' => '',
+                    'contractterms' => '',
+                    'dppopup' => '',
+                    'dppopupconfig' => '',
+                    'dppopupcss' => '',
+                    'dppopupjs' => '',
+                ],
+            ], JSON_THROW_ON_ERROR)
+        );
+
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMissingServices(): void
     {
-        $errors = $this->datasetValidationService->validate(json_encode([
-            'domain' => [
-                'domain_id' => '1234'
-            ]
-        ]));
+        static::expectException(InvalidDatasetException::class);
+        static::expectExceptionMessage(
+            'Invalid dataset: Decoded JSON does not contain "services" key.'
+        );
 
-        $this->assertEquals(['Decoded JSON does not contain "services" key'], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            json_encode([
+                'domain' => [
+                    'domain_id' => '1234'
+                ]
+            ], JSON_THROW_ON_ERROR)
+        );
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testMissingService(): void
     {
-        $errors = $this->datasetValidationService->validate(json_encode([
-            'domain' => [
-                'domain_id' => '1234'
-            ],
-            'services' => [
-                // Configuration mock returns ['imprint'] as expected services, so this test should fail because
-                // it does not contain all configured services.
-                'contractterms',
-            ]
-        ]));
+        static::expectException(InvalidDatasetException::class);
+        static::expectExceptionMessage(
+            'Invalid dataset: The service "imprint" is configured but missing from the API response.'
+        );
 
-        $this->assertEquals(['Missing service "imprint"'], $errors);
+        $this->datasetValidationService->validate(
+            new Configuration('', '', '', '', '', ['imprint'], ''),
+            json_encode([
+                'domain' => [
+                    'domain_id' => '1234'
+                ],
+                'services' => [
+                    'contractterms',
+                ]
+            ], JSON_THROW_ON_ERROR)
+        );
     }
 }

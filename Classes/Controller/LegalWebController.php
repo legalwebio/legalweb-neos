@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Controller;
 
-use LegalWeb\GdprTools\Configuration\Configuration;
+use LegalWeb\GdprTools\Configuration\ConfigurationService;
 use LegalWeb\GdprTools\Domain\Service\DatasetUpdateService;
 use LegalWeb\GdprTools\Exception\UpdateFailedException;
 use LegalWeb\GdprTools\LegalWebLoggerInterface;
@@ -27,9 +27,9 @@ class LegalWebController extends ActionController
 
     /**
      * @Flow\Inject
-     * @var Configuration
+     * @var ConfigurationService
      */
-    protected $configuration;
+    protected $configurationService;
 
     /**
      * @Flow\Inject
@@ -42,24 +42,26 @@ class LegalWebController extends ActionController
      */
     public function updateAction(string $token = ''): void
     {
-        if ($token === $this->configuration->getCallbackToken()) {
-            try {
-                $this->datasetUpdateService->update(true);
-                $this->respondWithSuccess([]);
-            } catch (UpdateFailedException $e) {
-                $this->legalWebLogger->error(
-                    'Dataset update error (frontend): ' . $e->getMessage(),
-                    ['exception' => $e]
-                );
-                $this->respondWithError(500, 1592407361953, 'Update failed: ' . $e->getMessage());
+        foreach ($this->configurationService->getConfigurations() as $configuration) {
+            if ($token === $configuration->getCallbackToken()) {
+                try {
+                    $this->datasetUpdateService->update(true);
+                    $this->respondWithSuccess([]);
+                } catch (UpdateFailedException $e) {
+                    $this->legalWebLogger->error(
+                        'Dataset update error (frontend): ' . $e->getMessage(),
+                        ['exception' => $e]
+                    );
+                    $this->respondWithError(500, 1592407361953, 'Update failed: ' . $e->getMessage());
+                }
+                return;
             }
-        } else {
-            $this->legalWebLogger->warning(
-                'Dataset update frontend request with invalid or missing token',
-                ['token' => $token]
-            );
-            $this->respondWithError(401, 1592407272608, 'Invalid callback token');
         }
+        $this->legalWebLogger->warning(
+            'Dataset update frontend request with invalid or missing token',
+            ['token' => $token]
+        );
+        $this->respondWithError(401, 1592407272608, 'Invalid callback token');
     }
 
     /**

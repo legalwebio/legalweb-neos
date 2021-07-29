@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Domain\Service;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use LegalWeb\GdprTools\Configuration\Configuration;
+use LegalWeb\GdprTools\Configuration\ConfigurationService;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
 use LegalWeb\GdprTools\Exception\UpdateFailedException;
@@ -15,6 +15,9 @@ use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Persistence\PersistenceManagerInterface;
 use Neos\Fusion\Core\Cache\ContentCache;
 
+/**
+ * @Flow\Scope("singleton")
+ */
 class DatasetUpdateService
 {
     /**
@@ -25,9 +28,9 @@ class DatasetUpdateService
 
     /**
      * @Flow\Inject
-     * @var Configuration
+     * @var ConfigurationService
      */
-    protected $configuration;
+    protected $configurationService;
 
     /**
      * @Flow\Inject
@@ -54,33 +57,84 @@ class DatasetUpdateService
     protected $contentCache;
 
     /**
+     * @Flow\Inject
+     * @var ClientFactory
+     */
+    protected $clientFactory;
+
+    /**
      * @param bool $force
-     * @return bool
      * @throws UpdateFailedException
      */
-    public function update(bool $force): bool
+    public function update(bool $force): void
     {
-        if (!$force && !$this->isUpdateNeeded()) {
-            $this->logger->info('Skipping unneeded dataset update without force');
-            return false;
+        $configurations = $this->configurationService->getConfigurations();
+        if (count($configurations) === 0) {
+            throw new UpdateFailedException(
+                'No configurations',
+                1627556442106,
+            );
         }
 
-        try {
-            $this->logger->info('Fetching new dataset', ['force' => $force]);
-            $response = $this->fetchDataset();
-            $this->logger->info('Received new dataset');
-            $validationErrors = $this->datasetValidationService->validate($response);
-            if (count($validationErrors) === 0) {
-                $this->storeResponse($response);
-                $this->logger->info('Stored new dataset');
-                $this->contentCache->flushByTag('LegalWeb-DataProtectionPopup-Cache-EntryTag');
-                $this->logger->info('Flushed popup cache');
-                return true;
-            }
-            throw new UpdateFailedException(
-                'Received invalid dataset: ' . implode('. ', $validationErrors),
-                1592817786605,
+        foreach ($configurations as $configuration) {
+            $this->updateSite($configuration, $force);
+        }
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @param bool $force
+     * @throws UpdateFailedException
+     */
+    protected function updateSite(Configuration $configuration, bool $force): void
+    {
+        if (!$force && !$this->isUpdateNeeded($configuration)) {
+            $this->logger->info(
+                'Skipping unneeded dataset update without force',
+                ['configurationKey' => $configuration->getKey()]
             );
+            return;
+        }
+
+        $response = $this->fetchDataset($configuration);
+        $this->logger->info('Received new dataset', ['configurationKey' => $configuration->getKey()]);
+
+        $this->datasetValidationService->validate($configuration, $response);
+
+        $this->storeResponse($configuration, $response);
+        $this->logger->info('Stored new dataset');
+
+        $this->contentCache->flushByTag('LegalWeb-DataProtectionPopup-Cache-EntryTag');
+        $this->logger->info('Flushed popup cache');
+    }
+
+    protected function isUpdateNeeded(Configuration $configuration): bool
+    {
+        $latest = $this->datasetRepository->getLatest($configuration);
+        $oneWeekAgo = time() - 7 * 24 * 60 * 60;
+        return !$latest instanceof Dataset || $latest->getCreationDateTime()->getTimestamp() < $oneWeekAgo;
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @return string
+     * @throws UpdateFailedException
+     */
+    protected function fetchDataset(Configuration $configuration): string
+    {
+        try {
+            $this->logger->info('Fetching new dataset', ['configurationKey' => $configuration->getKey()]);
+            return $this->clientFactory->getClient()->request(
+                'POST',
+                $configuration->getApiUrl(),
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/x-www-form-urlencoded',
+                        'Guid' => $configuration->getApiKey(),
+                        'Callback' => $configuration->getCallbackUrl(),
+                    ],
+                ]
+            )->getBody()->__toString();
         } catch (GuzzleException $e) {
             throw new UpdateFailedException(
                 'The legal web API request failed',
@@ -90,42 +144,9 @@ class DatasetUpdateService
         }
     }
 
-    /**
-     * @return bool
-     */
-    protected function isUpdateNeeded(): bool
+    protected function storeResponse(Configuration $config, string $json): void
     {
-        $latest = $this->datasetRepository->getLatest();
-        $oneWeekAgo = time() - 7 * 24 * 60 * 60;
-        return !$latest instanceof Dataset || $latest->getCreationDateTime()->getTimestamp() < $oneWeekAgo;
-    }
-
-    /**
-     * @return string
-     * @throws GuzzleException
-     */
-    protected function fetchDataset(): string
-    {
-        $client = new Client();
-        return $client->request(
-            'POST',
-            $this->configuration->getApiUrl(),
-            [
-                'headers' => [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Guid' => $this->configuration->getApiKey(),
-                    'Callback' => $this->configuration->getCallbackUrl(),
-                ],
-            ]
-        )->getBody()->__toString();
-    }
-
-    /**
-     * @param string $json
-     */
-    protected function storeResponse(string $json): void
-    {
-        $this->datasetRepository->create($json);
+        $this->datasetRepository->create($config, $json);
         $this->persistenceManager->persistAll();
     }
 }

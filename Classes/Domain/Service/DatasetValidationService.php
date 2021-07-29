@@ -5,41 +5,53 @@ declare(strict_types=1);
 namespace LegalWeb\GdprTools\Domain\Service;
 
 use LegalWeb\GdprTools\Configuration\Configuration;
+use LegalWeb\GdprTools\Exception\InvalidDatasetException;
 use Neos\Flow\Annotations as Flow;
 
+/**
+ * @Flow\Scope("singleton")
+ */
 class DatasetValidationService
 {
     /**
-     * @Flow\Inject
-     * @var Configuration
-     */
-    protected $configuration;
-
-    /**
      * @param string $json
-     * @return string[]
+     * @throws InvalidDatasetException
      */
-    public function validate(string $json): array
+    public function validate(Configuration $configuration, string $json): void
     {
         $decoded = json_decode($json, true);
         if (!is_array($decoded)) {
-            return ['Decoded JSON is not an array'];
+            throw new InvalidDatasetException(
+                ['Decoded JSON is not an array.'],
+                1627559489815
+            );
         }
         if (!isset($decoded['services'])) {
-            return ['Decoded JSON does not contain "services" key'];
+            throw new InvalidDatasetException(
+                ['Decoded JSON does not contain "services" key.'],
+                1627559489895
+            );
         }
         if (!isset($decoded['domain'])) {
-            return ['Decoded JSON does not contain "domain" key'];
+            throw new InvalidDatasetException(
+                ['Decoded JSON does not contain "domain" key.'],
+                1627559489994
+            );
         }
         if (!isset($decoded['domain']['domain_id'])) {
-            return ['Decoded JSON does not contain "domain_id" key in "domain" key'];
+            throw new InvalidDatasetException(
+                ['Decoded JSON does not contain "domain_id" key in "domain" key.'],
+                1627559490099
+            );
         }
         $errors = [];
-        foreach ($this->configuration->getServices() as $service) {
+        foreach ($configuration->getServices() as $service) {
             if (!isset($decoded['services'][$service])) {
-                $errors[] = 'The service "' . $service . '" is configured but missing from the API response';
+                $errors[] = 'The service "' . $service . '" is configured but missing from the API response.';
             }
         }
-        return $errors;
+        if (count($errors) > 0) {
+            throw new InvalidDatasetException($errors, 1627559490206);
+        }
     }
 }

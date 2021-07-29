@@ -8,20 +8,6 @@
             <h1>
                 <f:translate id="module.label" source="Backend" package="LegalWeb.GdprTools"/>
             </h1>
-        </div>
-    </div>
-    <div class="neos-row-fluid">
-        <div class="neos-span12">
-            <f:if condition="{latestDataset}">
-                <f:then>
-                    <p><f:translate id="latestUpdate" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.creationDateTime}"/></p>
-                    <p><f:translate id="domainId" source="Backend" package="LegalWeb.GdprTools" arguments="{0: latestDataset.domainId}"/></p>
-                    <p><f:link.action action="show" format="json" arguments="{id: latestDataset.persistenceObjectIdentifier}" target="_blank">Daten anzeigen</f:link.action></p>
-                </f:then>
-                <f:else>
-                    <p><f:translate id="noLatestUpdate" source="Backend" package="LegalWeb.GdprTools"/></p>
-                </f:else>
-            </f:if>
             <f:form action="update" method="post">
                 <div class="neos-row-fluid">
                     <div class="neos-span6">
@@ -40,12 +26,28 @@
     <div class="neos-row-fluid">
         <div class="neos-span12">
             <h2>
-                <f:translate id="messagesHeadline" source="Backend" package="LegalWeb.GdprTools"/>
+                <f:translate id="datasetsHeadline" source="Backend" package="LegalWeb.GdprTools"/>
             </h2>
+            <f:if condition="{datasets}">
+                <f:then>
+                    <f:for each="{datasets}" as="dataset">
+                        <h3>{dataset.configurationKey}</h3>
+                        <p><f:translate id="latestUpdate" source="Backend" package="LegalWeb.GdprTools" arguments="{0: dataset.creationDateTime}"/><br /></p>
+                        <p><f:translate id="domainId" source="Backend" package="LegalWeb.GdprTools" arguments="{0: dataset.domainId}"/><br /></p>
+                        <p><f:link.action action="show" format="json" arguments="{id: dataset.persistenceObjectIdentifier}" target="_blank"><f:translate id="showData" source="Backend" package="LegalWeb.GdprTools" /></f:link.action></p>
+                    </f:for>
+                </f:then>
+                <f:else>
+                    <p><f:translate id="noLatestUpdate" source="Backend" package="LegalWeb.GdprTools"/></p>
+                </f:else>
+            </f:if>
         </div>
     </div>
     <div class="neos-row-fluid">
         <div class="neos-span12">
+            <h2>
+                <f:translate id="messagesHeadline" source="Backend" package="LegalWeb.GdprTools"/>
+            </h2>
             <f:if condition="{messages}">
                 <f:then>
                     <ul>

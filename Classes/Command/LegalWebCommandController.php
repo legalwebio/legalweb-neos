@@ -36,7 +36,7 @@ class LegalWebCommandController extends CommandController
             $this->datasetUpdateService->update($force);
         } catch (UpdateFailedException $e) {
             $this->legalWebLogger->error(
-                'Dataset update error (cli)' . $e->getMessage(),
+                'Dataset update error (cli): ' . $e->getMessage(),
                 ['exception' => $e]
             );
         }

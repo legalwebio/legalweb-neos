@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Domain\Repository;
 
+use LegalWeb\GdprTools\Configuration\Configuration;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use Neos\Flow\Annotations\Scope;
 use Neos\Flow\Persistence\Exception\IllegalObjectTypeException;
@@ -15,13 +16,11 @@ use Neos\Flow\Persistence\Repository;
  */
 class DatasetRepository extends Repository
 {
-    /**
-     * @return Dataset|null
-     */
-    public function getLatest(): ?Dataset
+    public function getLatest(Configuration $configuration): ?Dataset
     {
-        $latest = $this
-            ->createQuery()
+        $query = $this->createQuery();
+        $latest = $query
+            ->matching($query->equals('configurationKey', $configuration->getKey()))
             ->setLimit(1)
             ->setOrderings(['creationDateTime' => QueryInterface::ORDER_DESCENDING])
             ->execute()
@@ -33,13 +32,9 @@ class DatasetRepository extends Repository
         }
     }
 
-    /**
-     * @param string $json
-     * @return Dataset
-     */
-    public function create(string $json): Dataset
+    public function create(Configuration $configuration, string $json): Dataset
     {
-        $entity = new Dataset($json);
+        $entity = new Dataset($configuration, $json);
         try {
             $this->add($entity);
         } catch (IllegalObjectTypeException $e) {

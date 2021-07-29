@@ -23,6 +23,12 @@
             <trans-unit id="messagesHeadline">
                 <source>Nachrichten</source>
             </trans-unit>
+            <trans-unit id="datasetsHeadline">
+                <source>Importierte Daten</source>
+            </trans-unit>
+            <trans-unit id="showData">
+                <source>Daten anzeigen.</source>
+            </trans-unit>
             <trans-unit id="noMessages">
                 <source>Keine Nachrichten vorhanden.</source>
             </trans-unit>

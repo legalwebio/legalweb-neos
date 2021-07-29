@@ -45,9 +45,6 @@ class DataProtectionPopup
         $this->js = $js;
     }
 
-    /**
-     * @return string
-     */
     public function getHtml(): string
     {
         return $this->html;
@@ -61,17 +58,11 @@ class DataProtectionPopup
         return $this->config;
     }
 
-    /**
-     * @return string
-     */
     public function getCss(): string
     {
         return $this->css;
     }
 
-    /**
-     * @return string
-     */
     public function getJs(): string
     {
         return $this->js;

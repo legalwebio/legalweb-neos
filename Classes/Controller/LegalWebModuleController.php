@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Controller;
 
+use LegalWeb\GdprTools\Configuration\ConfigurationService;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
 use LegalWeb\GdprTools\Domain\Service\DatasetUpdateService;
@@ -39,6 +40,12 @@ class LegalWebModuleController extends AbstractModuleController
 
     /**
      * @Flow\Inject
+     * @var ConfigurationService
+     */
+    protected $configurationService;
+
+    /**
+     * @Flow\Inject
      * @var LegalWebLoggerInterface
      */
     protected $legalWebLogger;
@@ -49,7 +56,14 @@ class LegalWebModuleController extends AbstractModuleController
     public function indexAction()
     {
         $this->view->assign('messages', $this->gdprToolsService->getMessages());
-        $this->view->assign('latestDataset', $this->datasetRepository->getLatest());
+        $datasets = [];
+        foreach ($this->configurationService->getConfigurations() as $configuration) {
+            $dataset = $this->datasetRepository->getLatest($configuration);
+            if (!is_null($dataset)) {
+                $datasets[] = $dataset;
+            }
+        }
+        $this->view->assign('datasets', $datasets);
     }
 
     /**
@@ -60,7 +74,7 @@ class LegalWebModuleController extends AbstractModuleController
     {
         try {
             $this->datasetUpdateService->update(true);
-            $this->addFlashMessage('updateSucceeded', '', Message::SEVERITY_OK);
+            $this->addFlashMessage('updateSucceeded');
         } catch (UpdateFailedException $e) {
             $this->legalWebLogger->error(
                 'Dataset update error (backend): ' . $e->getMessage(),

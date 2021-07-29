@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace LegalWeb\GdprTools\Domain\Service;
 
-use LegalWeb\GdprTools\Configuration\Configuration;
+use LegalWeb\GdprTools\Configuration\ConfigurationService;
 use LegalWeb\GdprTools\Domain\Model\DataProtectionPopup;
 use LegalWeb\GdprTools\Domain\Model\Dataset;
 use LegalWeb\GdprTools\Domain\Repository\DatasetRepository;
 use LegalWeb\GdprTools\LegalWebLoggerInterface;
 use Neos\Flow\Annotations as Flow;
 
+/**
+ * @Flow\Scope("singleton")
+ */
 class GdprToolsService
 {
     /**
@@ -21,9 +24,9 @@ class GdprToolsService
 
     /**
      * @Flow\Inject
-     * @var Configuration
+     * @var ConfigurationService
      */
-    protected $configuration;
+    protected $configurationService;
 
     /**
      * @Flow\Inject
@@ -31,46 +34,48 @@ class GdprToolsService
      */
     protected $logger;
 
-    /**
-     * @param string|null $language
-     * @return string
-     */
-    public function getImprint(string $language = null): string
+    public function getImprint(string $siteRootNodeName, string $language = null): string
     {
-        return $this->getService('imprint', $language);
+        $dataset = $this->getDataset($siteRootNodeName);
+        $result = is_null($dataset) ? null : $dataset->getImprint($language);
+        if (is_null($result)) {
+            $this->logger->error('Attempted to load missing service "imprint"');
+            return '';
+        }
+        return $result;
     }
 
-    /**
-     * @param string|null $language
-     * @return string
-     */
-    public function getDataProtectionStatement(string $language = null): string
+    public function getDataProtectionStatement(string $siteRootNodeName, string $language = null): string
     {
-        return $this->getService('dpstatement', $language);
+        $dataset = $this->getDataset($siteRootNodeName);
+        $result = is_null($dataset) ? null : $dataset->getDataProtectionStatement($language);
+        if (is_null($result)) {
+            $this->logger->error('Attempted to load missing service "dpstatement"');
+            return '';
+        }
+        return $result;
     }
 
-    /**
-     * @param string|null $language
-     * @return string
-     */
-    public function getContractTerms(string $language = null): string
+    public function getContractTerms(string $siteRootNodeName, string $language = null): string
     {
-        return $this->getService('contractterms', $language);
+        $dataset = $this->getDataset($siteRootNodeName);
+        $result = is_null($dataset) ? null : $dataset->getContractTerms($language);
+        if (is_null($result)) {
+            $this->logger->error('Attempted to load missing service "contractterms"');
+            return '';
+        }
+        return $result;
     }
 
-    /**
-     * @param string|null $language
-     * @return DataProtectionPopup
-     */
-    public function getDataProtectionPopup(string $language = null): DataProtectionPopup
+    public function getDataProtectionPopup(string $siteRootNodeName, string $language = null): DataProtectionPopup
     {
-        $services = $this->getServices();
-        return new DataProtectionPopup(
-            $this->getService('dppopup', $language),
-            $services['dppopupconfig'],
-            $services['dppopupcss'],
-            $services['dppopupjs'],
-        );
+        $dataset = $this->getDataset($siteRootNodeName);
+        $result = is_null($dataset) ? null : $dataset->getDataProtectionPopup($language);
+        if (is_null($result)) {
+            $this->logger->error('Attempted to load missing service "dppopup"');
+            return new DataProtectionPopup('', [], '', '');
+        }
+        return $result;
     }
 
     /**
@@ -81,55 +86,26 @@ class GdprToolsService
         return [];
     }
 
-    /**
-     * @param mixed[] $data
-     * @param string|null $language
-     * @return string
-     */
-    private function getByLanguage(array $data, string $language = null): string
+    private function getDataset(string $siteRootNodeName): ?Dataset
     {
-        if (is_string($language) && isset($data[$language])) {
-            return $data[$language];
+        $configuration = $this->configurationService->getConfiguration($siteRootNodeName);
+        if (is_null($configuration)) {
+            $this->logger->error(
+                'No configuration found',
+                ['siteRootNodeName' => $siteRootNodeName]
+            );
+            return null;
         }
-        return $data[$this->configuration->getFallbackLanguage()];
-    }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getServices(): array
-    {
-        return $this->getDatasetData()['services'] ?? [];
-    }
+        $dataset = $this->datasetRepository->getLatest($configuration);
+        if (is_null($dataset)) {
+            $this->logger->error(
+                'No dataset found',
+                ['siteRootNodeName' => $siteRootNodeName, 'configurationKey' => $configuration->getKey()]
+            );
+            return null;
+        }
 
-    /**
-     * @param string $key
-     * @param string|null $language
-     * @return string
-     */
-    private function getService(string $key, string $language = null): string
-    {
-        $services = $this->getServices();
-        if (!isset($services[$key])) {
-            $this->logger->error(sprintf('Attempted to load missing service "%s"', $key));
-            return '';
-        }
-        return $this->getByLanguage($services[$key], $language);
-    }
-
-    /**
-     * @return mixed[]
-     */
-    private function getDatasetData(): array
-    {
-        $dataset = $this->datasetRepository->getLatest();
-        if (!$dataset instanceof Dataset) {
-            return [];
-        }
-        $decoded = json_decode($dataset->getJson(), true);
-        if (is_array($decoded)) {
-            return $decoded;
-        }
-        return [];
+        return $dataset;
     }
 }
