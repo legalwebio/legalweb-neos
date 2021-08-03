@@ -22,7 +22,7 @@ Configure composer to use github repository:
 Then require the package:
 
 ```bash
-composer require "legalwebio/legalweb-neos:@dev"
+composer require "legalwebio/legalweb-neos"
 ```
 
 And run the migrations:
