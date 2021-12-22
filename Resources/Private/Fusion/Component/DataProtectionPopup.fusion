@@ -3,11 +3,13 @@ prototype(LegalWeb.GdprTools:Component.DataProtectionPopup) < prototype(Neos.Fus
     configJs = ${Array.join(Array.map(this.dataProtectionPopup.config, (value, key) => 'window.' + key + ' = ' + Json.stringify(value) + ';'), '')}
 
     style = ${this.dataProtectionPopup.css}
+    // Add style for not close popup when clicking outside 
+    additionalStyle = '.sp-dsgvo-popup-overlay {pointer-events: none !important;} .sp-dsgvo-privacy-popup.container-fluid.show {pointer-events: auto !important;}'
     html = ${this.dataProtectionPopup.html}
     javascript = ${'(function(){' + this.configJs + this.dataProtectionPopup.js + '})();'}
     
     renderer = afx`
-        <style @if.set={props.style}>{props.style}</style>
+        <style @if.set={props.style}>{props.style + props.additionalStyle}</style>
         {props.html}
         <script @if.set={props.javascript}>{props.javascript}</script>
     `
