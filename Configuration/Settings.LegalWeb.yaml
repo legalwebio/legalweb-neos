@@ -1,0 +1,6 @@
+LegalWeb:
+  GdprTools:
+    # Add style for not close popup when clicking outside of it
+    additionalStyle: >-
+      .sp-dsgvo-popup-overlay{pointer-events:none !important}
+      .sp-dsgvo-privacy-popup.container-fluid.show{pointer-events:auto !important}
