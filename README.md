@@ -96,7 +96,7 @@ Our team is small but nice! Lawyer, programmer, marketing – everything is ther
 ## Installation
 
 ```bash
-composer require "legalwebio/legalweb-neos"
+composer require legalwebio/legalweb-neos
 ```
 
 This puts the dependency inside the outer composer.json/lock (usually in your repo root or `/app`). Important: In case,
