@@ -106,16 +106,9 @@ composer.json inside the package as well to ensure a correct flow package and co
 DistributionPackages/Your.SitePackage/package.json
 
 ```json
-    ...
-
     "require": {
-        ...
-
-        "legalwebio/legalweb-neos": "^2.0",
-
-        ...
-    },
-    ...
+        "legalwebio/legalweb-neos": "^2.0"
+    }
 ```
 
 And run the migrations:
