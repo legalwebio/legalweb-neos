@@ -12,5 +12,4 @@ use Neos\Flow\Exception;
  */
 class InvalidConfigurationException extends Exception
 {
-
 }
