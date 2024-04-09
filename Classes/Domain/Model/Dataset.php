@@ -43,16 +43,12 @@ class Dataset
         $this->json = $json;
         $this->configurationKey = $configuration->getKey();
         $this->fallbackLanguage = $configuration->getFallbackLanguage();
-        try {
-            $this->creationDateTime = new \DateTimeImmutable();
-        } catch (\Exception $e) {
-            // @ignoreException
-        }
+        $this->creationDateTime = new \DateTimeImmutable();
     }
 
     public function getPersistenceObjectIdentifier(): string
     {
-        return $this->Persistence_Object_Identifier;
+        return $this->Persistence_Object_Identifier; // @phpstan-ignore-line
     }
 
     public function getDomainId(): string

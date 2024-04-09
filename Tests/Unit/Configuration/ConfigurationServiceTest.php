@@ -103,7 +103,7 @@ class ConfigurationServiceTest extends TestCase
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, array<string, mixed>>
      */
     private function validData(): array
     {

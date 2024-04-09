@@ -2,7 +2,7 @@
 
 ## Requirements
 
-`"neos/neos": "~4.3.0"` or `"neos/neos": "~5.3.0"`
+`"neos/neos": "~8.3.0"`
 
 ## Installation
 
